@@ -28,7 +28,9 @@ if not BOT_TOKEN:
     logger.error("❌ BOT_TOKEN not found! Please set your bot token in environment variables.")
     sys.exit(1)
 
-OWNER_ID = "8666373816"
+REQUIRED_CHANNELS = ["@naytonem"]
+GROUP_JOIN_LINK = "t.me/naytonem"
+OWNER_ID = "OWNER_ID"
 OWNER_USERNAME = "@nayt_1m"
 
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -118,6 +120,19 @@ def webhook():
 
 
 # === TELEGRAM COMMANDS
+
+@bot.message_handler(commands=['start'])
+def start_command(message):
+    user_id = message.from_user.id
+    if not is_user_in_channel(user_id):
+        markup = InlineKeyboardMarkup()
+        for channel in REQUIRED_CHANNELS:
+            markup.add(InlineKeyboardButton(f"🔗 Join {channel}", url=f"https://t.me/{channel.strip('@')}") )
+        bot.reply_to(message, "📢 Channel Membership Required\nTo use this bot, you must join all our channels first", reply_markup=markup, parse_mode="Markdown")
+        return
+    if user_id not in like_tracker:
+        like_tracker[user_id] = {"used": 0, "last_used": datetime.now() - timedelta(days=1)}
+    bot.reply_to(message, "✅ You're verified! Use /like to send likes.", parse_mode="Markdown")
 
 
 @bot.message_handler(commands=['like'])
@@ -263,6 +278,13 @@ def help_command(message):
         bot.reply_to(message, help_text, parse_mode="Markdown")
         return
 
+    # For regular users, check channel membership first
+    if not is_user_in_channel(user_id):
+        markup = InlineKeyboardMarkup()
+        for channel in REQUIRED_CHANNELS:
+            markup.add(InlineKeyboardButton(f"🔗 Join {channel}", url=f"https://t.me/{channel.strip('@')}") )
+        bot.reply_to(message, "❌ You must join all our channels to use this command.", reply_markup=markup, parse_mode="Markdown")
+        return
 
     # Show regular user help
     help_text = (
