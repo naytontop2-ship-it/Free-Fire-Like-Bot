@@ -28,7 +28,7 @@ if not BOT_TOKEN:
     logger.error("❌ BOT_TOKEN not found! Please set your bot token in environment variables.")
     sys.exit(1)
 
-REQUIRED_CHANNELS = ["@naytonem"]
+REQUIRED_CHANNELS = ["@naytlike"]
 GROUP_JOIN_LINK = "https://t.me/+ouvbNYIHolIwMmY1"
 OWNER_ID = "8666373816"
 OWNER_USERNAME = "@nayt_1m"
