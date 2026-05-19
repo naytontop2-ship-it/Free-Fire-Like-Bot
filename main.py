@@ -72,7 +72,7 @@ def is_user_in_channel(user_id):
 
 
 def call_api(region, uid):
-    url = f"https://free-fire-nayt-like.vercel.app/like?uid={uid}&server_name={region}"
+    url = f"https://new-like-api-by-ajay-220-likes.vercel.app/like?uid={uid}&server_name={region}"
     try:
         response = requests.get(url, timeout=20)
         if response.status_code != 200:
